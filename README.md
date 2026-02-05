@@ -3,7 +3,7 @@
 ### **Contexte technique**
 - **Source** : VM MySQL `172.16.130.130:3306` (base `classicmodels`)
 - **Cible** : VM PostgreSQL `172.16.130.129:5432` (base `classicmodels`)
-- **Client** : DBeaver sur Mac (`172.16.130.1`) en Host-only VMware Fusion
+- **Client** : DBeaver sur Mac (`172.16.130.1`) en Bridge VMware Fusion
 - **Export** : Réalisé avec succès
 
 ### **1. Configuration réseau Host-only**
@@ -12,8 +12,8 @@ MAC (DBeaver)     172.16.130.1
 ├─ VM MySQL       172.16.130.130:3306
 └─ VM PostgreSQL  172.16.130.129:5432
 ```
-- Passage de NAT (`172.20.10.x`) vers **Host-only** (`172.16.130.x`) 
-- IPs statiques configurées via `/etc/netplan/01-netcfg.yaml`
+- Passage de NAT (`172.20.10.x`) vers **Bridge** (`172.16.130.x`) 
+- IPs statiques configurées via `/etc/netplan/50-netcfg.yaml`
 - UFW ouvert : `3306/tcp`, `5432/tcp`, `22/tcp` ALLOW anywhere
 
 ### **2. Validation données source (MySQL)**
@@ -23,7 +23,7 @@ USE classicmodels;
 SELECT COUNT(*) FROM customers;     -- 122 clients
 SELECT COUNT(*) FROM orders;        -- 326 réservations
 ```
-** 500+ enregistrements validés**
+**500+ enregistrements validés**
 
 ### **3. Configuration utilisateur MySQL**
 ```sql
@@ -52,12 +52,12 @@ SCHÉMA + DONNÉES exportés depuis DBeaver
 
 ### **6. Validation fonctionnelle**
 ```
-📊 SOURCE MySQL :
+SOURCE MySQL :
 ├── customers : 122 utilisateurs
 └── orders : 326 réservations
 
-🔄 EXPORT : Réussi (schéma + données)
-📋 PRÊT pour import PostgreSQL (Niveau 2)
+EXPORT : Réussi (schéma + données)
+PRÊT pour import PostgreSQL (Niveau 2)
 ```
 
 ### **7. Conclusion Niveau 1**
