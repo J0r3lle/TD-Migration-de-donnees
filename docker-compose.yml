@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-reservation
+    environment:
+      POSTGRES_USER: reservation_voyage
+      POSTGRES_PASSWORD: reservation_voyage_password
+      POSTGRES_DB: reservation_voyage
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway:latest
+    container_name: flyway-migration
+    depends_on:
+      - postgres
+    volumes:
+      - ./sql:/flyway/sql
+      - ./conf:/flyway/conf
+    command: -configFiles=/flyway/conf/flyway.conf migrate
