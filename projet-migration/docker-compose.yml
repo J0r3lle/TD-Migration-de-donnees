@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: gt_pg_migration
+    environment:
+      POSTGRES_USER: gt_user
+      POSTGRES_PASSWORD: gt_pass
+      POSTGRES_DB: globetrotter
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgm_data:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway:10
+    container_name: gt_pg_flyway
+    depends_on:
+      - postgres
+    volumes:
+      - ./flyway/sql:/flyway/sql
+      - ./flyway/conf:/flyway/conf
+    working_dir: /flyway
+    command: [
+      "-configFiles=/flyway/conf/flyway.conf",
+      "migrate"
+    ]
+
+volumes:
+  pgm_data:
